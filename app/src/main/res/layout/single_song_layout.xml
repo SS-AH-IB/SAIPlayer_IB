@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="2dp"
+    android:background="@null">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/item_container_root"
+        android:background="@drawable/single_song_background"
+        android:weightSum="10"
+        android:elevation="30dp"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/album_art_of_songs"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="5"
+            android:layout_weight="7"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="start|center|bottom"
+                android:text="Title"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:singleLine="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textColor="#FFFFFF"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:id="@+id/songs_title_on_songs"/>
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="start|center|top"
+                android:text="Details"
+                android:textSize="10dp"
+                android:singleLine="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textStyle="italic"
+                android:textColor="#FFFFFF"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:id="@+id/songs_detail_on_songs"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="&#8942;"
+            android:textSize="15dp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</LinearLayout>
