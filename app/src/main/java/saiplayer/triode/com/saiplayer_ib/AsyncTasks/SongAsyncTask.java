@@ -35,10 +35,14 @@ public class SongAsyncTask extends AsyncTask<String,Void,Bitmap> {
                     "Album=?",
                     new String[]{strings[0]},
                     null);
-            albumArtCursor.moveToFirst();
-            int songAlbumArt = albumArtCursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
-            String currentAlbumArt = albumArtCursor.getString(songAlbumArt);
-            bitmap = BitmapFactory.decodeFile(currentAlbumArt);
+            if (albumArtCursor.moveToFirst()){
+                int songAlbumArt = albumArtCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
+                String currentAlbumArt = albumArtCursor.getString(songAlbumArt);
+                bitmap = BitmapFactory.decodeFile(currentAlbumArt);
+            }
+            else {
+                bitmap = null;
+            }
         }
         else {
             bitmap = null;
