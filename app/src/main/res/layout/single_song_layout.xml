@@ -12,12 +12,14 @@
         android:background="@drawable/single_song_background"
         android:weightSum="10"
         android:elevation="30dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="3dp">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/album_art_of_songs"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            android:layout_marginLeft="2dp"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -25,7 +27,8 @@
             android:weightSum="5"
             android:layout_weight="7"
             android:layout_gravity="center"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginLeft="4dp">
             <TextView
                 android:layout_gravity="center"
                 android:gravity="start|center|bottom"
@@ -68,7 +71,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="&#8942;"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:textColor="#FFFFFF"
             android:gravity="center"
             android:layout_gravity="center"/>

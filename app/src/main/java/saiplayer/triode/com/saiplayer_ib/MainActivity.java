@@ -2,11 +2,18 @@ package saiplayer.triode.com.saiplayer_ib;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -16,13 +23,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import org.michaelevans.colorart.library.ColorArt;
+
+import java.util.ArrayList;
+
+import saiplayer.triode.com.saiplayer_ib.DataHolder.SongsDataProvider;
 import saiplayer.triode.com.saiplayer_ib.Fragments.ArtistsFragment;
 import saiplayer.triode.com.saiplayer_ib.Fragments.PermissionFragment;
 import saiplayer.triode.com.saiplayer_ib.Fragments.PlaylistsFragment;
 import saiplayer.triode.com.saiplayer_ib.Fragments.SongsFragment;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,SongsFragment.OnSongPressedListener{
 
     private static final int STORAGE_PERMISSION_REQUEST = 1;
     boolean Permission_Status = false;
@@ -39,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SongsFragment songsFragment;
     PlaylistsFragment playlistsFragment;
 
+    RelativeLayout category_playlist;
+    RelativeLayout category_artist;
+    RelativeLayout category_song;
+
+
     View drawerView;
     View drawerContent;
     View mainContent;
@@ -48,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CheckPermission();
 
         main_drawer_container = (DrawerLayout) findViewById(R.id.main_drawer_container);
         drawerView = (View)findViewById(R.id.drawer_view);
@@ -56,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainContent = (View)findViewById(R.id.main_content);
         drawer_top_section_view = (View)findViewById(R.id.drawer_top_section_view);
         activity_main_background = (ImageView)findViewById(R.id.activity_main_background);
+        category_playlist = (RelativeLayout)findViewById(R.id.category_playlist);
+        category_artist = (RelativeLayout)findViewById(R.id.category_artist);
+        category_song = (RelativeLayout)findViewById(R.id.category_song);
         plalists_button = (ImageButton)findViewById(R.id.playlists_button);
         artists_button = (ImageButton)findViewById(R.id.artists_button);
         songs_button = (ImageButton)findViewById(R.id.songs_button);
@@ -80,26 +100,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         main_drawer_container.setDrawerListener(actionBarDrawerToggle);
         main_drawer_container.closeDrawer(drawerView);
         drawerContent.setX(drawerView.getWidth());
+        CheckPermission();
 
     }
 
     public void CheckPermission(){
-
-        if (Build.VERSION.SDK_INT>=23){
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_REQUEST);
-            }
-            else {
-                Permission_Status = true;
-                playlistsFragment = new PlaylistsFragment();
-                artistsFragment = new ArtistsFragment();
-                songsFragment = new SongsFragment();
-
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.category_content, songsFragment);
-                fragmentTransaction.commit();
-            }
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_REQUEST);
         }
         else {
             Permission_Status = true;
@@ -173,4 +181,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void onSongPressed(int songPosition, ArrayList<SongsDataProvider> arrayList) {
+        Uri albumArtUri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
+        Bitmap albumBitmap = null;
+        if (arrayList.get(songPosition).getSongAlbum() != null){
+            Cursor albumArtCursor = getContentResolver().query(albumArtUri, new String[]{
+                            MediaStore.Audio.Albums.ALBUM,
+                            MediaStore.Audio.Albums.ALBUM_ART},
+                    "ALBUM_KEY=?",
+                    new String[]{arrayList.get(songPosition).getSongAlbum()},
+                    null);
+            if (albumArtCursor.moveToFirst()){
+                int songAlbumArt = albumArtCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
+                String currentAlbumArt = albumArtCursor.getString(songAlbumArt);
+                if (currentAlbumArt != null){
+                    albumBitmap = BitmapFactory.decodeFile(currentAlbumArt);
+                }
+            }
+        }
+        if (albumBitmap != null){
+            Bitmap deafult_blurred = BlurBitmap.blur(this, albumBitmap);
+            BitmapDrawable default_drawable = new BitmapDrawable(getResources(),deafult_blurred);
+            activity_main_background.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            activity_main_background.setImageDrawable(default_drawable);
+        }
+        else if (albumBitmap == null){
+            albumBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.reside_background_1);
+            Bitmap deafult_blurred = BlurBitmap.blur(this, albumBitmap);
+            BitmapDrawable default_drawable = new BitmapDrawable(getResources(),deafult_blurred);
+            activity_main_background.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            activity_main_background.setImageDrawable(default_drawable);
+        }
+
+        ColorArt colorArt = new ColorArt(albumBitmap);
+        int pixelColorPrimary = 0;
+        int pixelColorSecondary = 0;
+        int background_alpha = Color.alpha(colorArt.getPrimaryColor());
+        int background_red = Color.red(colorArt.getPrimaryColor());
+        int background_green = Color.green(colorArt.getPrimaryColor());
+        int background_blue = Color.blue(colorArt.getPrimaryColor());
+        background_alpha*=0.25;
+        pixelColorPrimary = Color.argb(background_alpha,background_red,background_green,background_blue);
+        background_alpha = Color.alpha(colorArt.getSecondaryColor());
+        background_red = Color.red(colorArt.getSecondaryColor());
+        background_green = Color.green(colorArt.getSecondaryColor());
+        background_blue = Color.blue(colorArt.getSecondaryColor());
+        background_alpha*=0.25;
+        pixelColorSecondary = Color.argb(background_alpha,background_red,background_green,background_blue);
+
+        GradientDrawable gradientDrawable = (GradientDrawable)drawer_top_section_view.getBackground();
+        gradientDrawable.setColor(colorArt.getPrimaryColor());
+        drawerContent.setBackgroundColor(pixelColorPrimary);
+        /*gradientDrawable = (GradientDrawable)category_playlist.getBackground();
+        gradientDrawable.setColor(pixelColorPrimary);
+        gradientDrawable = (GradientDrawable)category_artist.getBackground();
+        gradientDrawable.setColor(pixelColorPrimary);
+        gradientDrawable = (GradientDrawable)category_song.getBackground();
+        gradientDrawable.setColor(pixelColorPrimary);*/
+        RippleDrawable rippleDrawable1 = (RippleDrawable) plalists_button.getBackground();
+        RippleDrawable rippleDrawable2 = (RippleDrawable) artists_button.getBackground();
+        RippleDrawable rippleDrawable3 = (RippleDrawable) songs_button.getBackground();
+        int[][] states = new int[][] { new int[] { android.R.attr.state_enabled} };
+        int[] colors = new int[] { colorArt.getSecondaryColor() };
+        ColorStateList colorStateList = new ColorStateList(states,colors);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            rippleDrawable1.setColor(colorStateList);
+            rippleDrawable2.setColor(colorStateList);
+            rippleDrawable3.setColor(colorStateList);
+        }
+
+
+    }
 }

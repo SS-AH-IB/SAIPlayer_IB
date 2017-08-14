@@ -13,6 +13,13 @@
         android:layout_height="match_parent"
         android:id="@+id/list_song_items"
         android:fitsSystemWindows="true"
-        android:padding="5dp"
-        tools:listitem="@layout/single_song_layout"/>
+        tools:listitem="@layout/single_song_layout"
+        android:animationCache="true"
+        android:scrollingCache="false"
+        android:alwaysDrawnWithCache="false"
+        android:fastScrollEnabled="true"
+        android:fastScrollStyle="@color/colorPrimaryDark"
+        android:fadeScrollbars="true"
+        android:fastScrollAlwaysVisible="true"/>
+
 </RelativeLayout>

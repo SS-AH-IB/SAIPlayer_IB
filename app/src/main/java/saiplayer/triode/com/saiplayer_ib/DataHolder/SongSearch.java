@@ -20,7 +20,7 @@ public class SongSearch {
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(uri, new String[]{MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.ALBUM_KEY,
                 MediaStore.Audio.Media.YEAR,
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA}, null, null, null);
@@ -28,7 +28,7 @@ public class SongSearch {
         if (songCursor != null && songCursor.moveToFirst()) {
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+            int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY);
             int songYear = songCursor.getColumnIndex(MediaStore.Audio.Media.YEAR);
             int songDuration = songCursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
             int songPosition = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);

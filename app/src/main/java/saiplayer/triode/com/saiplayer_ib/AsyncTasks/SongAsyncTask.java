@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.view.View;
 import android.widget.ImageView;
 
 /**
@@ -18,10 +17,9 @@ public class SongAsyncTask extends AsyncTask<String,Void,Bitmap> {
     private ImageView imageView;
     private ContentResolver contentResolver;
 
-    public SongAsyncTask (ImageView imageView,ContentResolver contentResolver){
+    public SongAsyncTask (ImageView imageView, ContentResolver contentResolver){
         this.imageView = imageView;
         this.contentResolver = contentResolver;
-        imageView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -32,13 +30,18 @@ public class SongAsyncTask extends AsyncTask<String,Void,Bitmap> {
             Cursor albumArtCursor = contentResolver.query(albumArtUri, new String[]{
                             MediaStore.Audio.Albums.ALBUM,
                             MediaStore.Audio.Albums.ALBUM_ART},
-                    "Album=?",
+                    "ALBUM_KEY=?",
                     new String[]{strings[0]},
                     null);
             if (albumArtCursor.moveToFirst()){
                 int songAlbumArt = albumArtCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
                 String currentAlbumArt = albumArtCursor.getString(songAlbumArt);
-                bitmap = BitmapFactory.decodeFile(currentAlbumArt);
+                if (currentAlbumArt != null){
+                    bitmap = BitmapFactory.decodeFile(currentAlbumArt);
+                }
+                else {
+                    bitmap = null;
+                }
             }
             else {
                 bitmap = null;
@@ -54,7 +57,7 @@ public class SongAsyncTask extends AsyncTask<String,Void,Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         if (imageView != null && bitmap != null) {
             imageView.setImageBitmap(bitmap);
-            imageView.setVisibility(View.VISIBLE);
         }
     }
+
 }
