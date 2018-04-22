@@ -12,10 +12,8 @@ import java.util.Comparator;
 /**
  * Created by dell on 07-Aug-17.
  */
-
 public class SongSearch {
     ArrayList<SongsDataProvider> songsDataProviders = new ArrayList<SongsDataProvider>();
-
     public ArrayList<SongsDataProvider> getMusic(ContentResolver contentResolver) {
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(uri, new String[]{MediaStore.Audio.Media.TITLE,
@@ -39,10 +37,19 @@ public class SongSearch {
                 String currentAlbum = songCursor.getString(songAlbum);
                 String currentArtist = songCursor.getString(songArtist);
                 String currentYear = songCursor.getString(songYear);
-                double totalDuration = Double.parseDouble(songCursor.getString(songDuration)) / 60000;
+                String currentDuration = null;
+                double totalDuration=0.0;
+                if(songCursor.getString(songDuration)!=null) {
+                    totalDuration = Double.parseDouble(songCursor.getString(songDuration)) / 60000.0;
+                }
                 long durationMinute = (long) totalDuration;
                 long durationSecond = (long) ((totalDuration - durationMinute) * 60);
-                String currentDuration = String.valueOf(durationMinute) + ":" + String.valueOf(durationSecond) + "mins";
+                if (durationSecond>9){
+                    currentDuration = String.valueOf(durationMinute) + ":" + String.valueOf(durationSecond);
+                }
+                else {
+                    currentDuration = String.valueOf(durationMinute) + ":0" + String.valueOf(durationSecond);
+                }
                 String currentDetailString = currentArtist + " | " + currentYear + " | " + currentDuration;
                 SongsDataProvider dataProvider = new SongsDataProvider(currentTitle,
                         currentDetailString,

@@ -17,7 +17,7 @@ public class SongsScrollAnimation {
         /*ObjectAnimator translateY = ObjectAnimator.ofFloat(view, "translationY" , 50,-50,0);
         translateY.setDuration(700);*/
 
-        ObjectAnimator translateX = ObjectAnimator.ofFloat(view, "translationX" , 200,0);
+        ObjectAnimator translateX = ObjectAnimator.ofFloat(view, "translationX" , 50,-10,0);
         translateX.setDuration(500);
 
         animatorSet.playTogether(translateX);

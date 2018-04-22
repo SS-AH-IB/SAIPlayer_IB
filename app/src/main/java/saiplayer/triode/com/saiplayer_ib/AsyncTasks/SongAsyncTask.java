@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
+import saiplayer.triode.com.saiplayer_ib.R;
+
 /**
  * Created by dell on 07-Aug-17.
  */
@@ -46,6 +48,7 @@ public class SongAsyncTask extends AsyncTask<String,Void,Bitmap> {
             else {
                 bitmap = null;
             }
+            albumArtCursor.close();
         }
         else {
             bitmap = null;
@@ -57,6 +60,9 @@ public class SongAsyncTask extends AsyncTask<String,Void,Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         if (imageView != null && bitmap != null) {
             imageView.setImageBitmap(bitmap);
+        }
+        else {
+            imageView.setImageResource(R.drawable.blank_song_holder);
         }
     }
 

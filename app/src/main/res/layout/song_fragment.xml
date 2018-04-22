@@ -3,23 +3,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <ListView
         android:drawingCacheQuality="high"
-        android:persistentDrawingCache="scrolling"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_song_items"
-        android:fitsSystemWindows="true"
         tools:listitem="@layout/single_song_layout"
-        android:animationCache="true"
-        android:scrollingCache="false"
-        android:alwaysDrawnWithCache="false"
+        android:smoothScrollbar="true"
         android:fastScrollEnabled="true"
-        android:fastScrollStyle="@color/colorPrimaryDark"
-        android:fadeScrollbars="true"
-        android:fastScrollAlwaysVisible="true"/>
+        android:fitsSystemWindows="true"
+        android:fastScrollAlwaysVisible="false"
+        android:divider="@null"
+        android:background="@null"/>
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="24dp"
+        android:id="@+id/song_search_tool"/>
+
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:id="@+id/song_search_view"
+        app:searchBackground="@drawable/music_search_background"
+        app:searchCloseIcon="@drawable/ic_action_navigation_close_inverted"
+        app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"/>
 
 </RelativeLayout>

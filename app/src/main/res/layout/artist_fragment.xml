@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
-    <TextView
+    android:layout_height="match_parent">
+
+    <GridView
+        android:drawingCacheQuality="high"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:textColor="#FFFFFF"
-        android:textSize="50dp"
-        android:text="ARTISTS"/>
+        android:padding="5dp"
+        android:numColumns="2"
+        tools:listitem="@layout/single_artist_layout"
+        android:id="@+id/list_artist_items"
+        android:horizontalSpacing="5dp"
+        android:smoothScrollbar="true"
+        android:verticalSpacing="10dp"
+        android:scrollbars="vertical"
+        android:background="@null"
+        android:layout_margin="5dp">
+    </GridView>
 
 </LinearLayout>
